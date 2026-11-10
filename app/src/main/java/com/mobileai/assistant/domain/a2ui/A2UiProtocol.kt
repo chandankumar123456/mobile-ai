@@ -84,3 +84,4 @@ sealed interface A2UiMessage {
         val surfaceId: String
     ) : A2UiMessage
 }
+

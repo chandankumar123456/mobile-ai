@@ -32,3 +32,4 @@ data class EvaluationMetrics(
 
     val totalEvaluatedCases: Int
 )
+

@@ -72,3 +72,4 @@ sealed interface McpConnectionStatus {
     data class Connected(val protocolVersion: String, val toolCount: Int) : McpConnectionStatus
     data class Error(val message: String, val throwable: Throwable? = null) : McpConnectionStatus
 }
+

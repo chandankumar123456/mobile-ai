@@ -36,3 +36,4 @@ data class TraceEvent(
     val durationMs: Long? = null,
     val attributes: Map<String, String> = emptyMap()
 )
+

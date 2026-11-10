@@ -41,3 +41,4 @@ class BenchmarkRunnerTest {
         assertTrue(csv.contains("100.0%"))
     }
 }
+

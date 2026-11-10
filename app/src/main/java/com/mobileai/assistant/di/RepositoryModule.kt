@@ -34,3 +34,4 @@ class RepositoryModule(
     val dotRepository: DotRepository by lazy { DotRepositoryImpl(context) }
     val artifactRepository: ArtifactRepository by lazy { ArtifactRepositoryImpl(context) }
 }
+

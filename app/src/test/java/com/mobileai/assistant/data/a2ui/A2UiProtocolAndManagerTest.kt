@@ -85,3 +85,4 @@ class A2UiProtocolAndManagerTest {
         assertNull(manager.getSurface("surf-temp"))
     }
 }
+

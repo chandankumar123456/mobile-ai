@@ -25,3 +25,4 @@ class UseCaseModule(
     val getImportedModelsUseCase: GetImportedModelsUseCase by lazy { GetImportedModelsUseCase(modelRepository) }
     val deleteModelUseCase: DeleteModelUseCase by lazy { DeleteModelUseCase(modelRepository) }
 }
+

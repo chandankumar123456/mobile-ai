@@ -357,3 +357,4 @@ sealed class AppError : Exception() {
         }
     }
 }
+

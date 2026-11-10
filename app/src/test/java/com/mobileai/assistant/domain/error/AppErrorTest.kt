@@ -45,3 +45,4 @@ class AppErrorTest {
         assertTrue(checksumMismatch.isRecoverable)
     }
 }
+

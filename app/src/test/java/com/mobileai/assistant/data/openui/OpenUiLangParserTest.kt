@@ -70,3 +70,4 @@ card(title="Server Cluster", style="outlined") {
         assertEquals("Streaming Card", nodes[0].getStringAttr("title"))
     }
 }
+

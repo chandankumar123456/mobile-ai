@@ -79,3 +79,4 @@ data class BenchmarkReport(
         return sb.toString()
     }
 }
+

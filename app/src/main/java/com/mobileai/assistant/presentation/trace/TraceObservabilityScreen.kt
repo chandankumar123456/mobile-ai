@@ -133,3 +133,4 @@ private fun TraceItemCard(event: TraceEvent, timeFormat: SimpleDateFormat) {
         }
     }
 }
+

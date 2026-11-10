@@ -23,3 +23,4 @@ class MobileAiApplication : Application() {
         viewModelFactory = ViewModelFactory(appContainer)
     }
 }
+

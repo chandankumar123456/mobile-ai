@@ -108,3 +108,4 @@ class McpClientAndServerManagerTest {
         assertTrue(result.errorMessage!!.contains("No execution handler registered"))
     }
 }
+
