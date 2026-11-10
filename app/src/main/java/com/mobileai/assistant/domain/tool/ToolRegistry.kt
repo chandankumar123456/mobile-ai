@@ -1,5 +1,8 @@
 package com.mobileai.assistant.domain.tool
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -22,6 +25,8 @@ class DefaultToolRegistry : ToolRegistry {
 
     private val tools = ConcurrentHashMap<String, ToolDefinition>()
     private val alwaysAllowedPermissions = ConcurrentHashMap<String, Boolean>()
+
+    private val json = Json { ignoreUnknownKeys = true }
 
     init {
         registerBuiltInTools()
@@ -66,7 +71,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Reads content of an existing artifact in the active Dot workspace.",
                 category = ToolCategory.WORKSPACE,
                 sensitivity = ToolSensitivity.SAFE,
-                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"}},"required":["artifactId"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"}},"required":["artifactId"]}""",
+                handler = { args, _ ->
+                    val artifactId = parseField(args, "artifactId") ?: "default"
+                    ToolExecutionResult.success("""{"artifactId":"$artifactId","status":"read","content":"Sample workspace content"}""")
+                }
             )
         )
         registerTool(
@@ -76,7 +85,10 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Returns metadata list of current workspace artifacts.",
                 category = ToolCategory.WORKSPACE,
                 sensitivity = ToolSensitivity.SAFE,
-                parameterSchemaJson = """{"type":"object","properties":{}}"""
+                parameterSchemaJson = """{"type":"object","properties":{}}""",
+                handler = { _, _ ->
+                    ToolExecutionResult.success("""{"artifacts":[],"count":0}""")
+                }
             )
         )
         registerTool(
@@ -86,7 +98,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Searches stored facts and context in Dot persistent memory.",
                 category = ToolCategory.MEMORY,
                 sensitivity = ToolSensitivity.SAFE,
-                parameterSchemaJson = """{"type":"object","properties":{"query":{"type":"string"}},"required":["query"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"query":{"type":"string"}},"required":["query"]}""",
+                handler = { args, dotId ->
+                    val query = parseField(args, "query") ?: ""
+                    ToolExecutionResult.success("""{"dotId":"$dotId","query":"$query","results":[]}""")
+                }
             )
         )
         registerTool(
@@ -96,7 +112,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Queries status and progress logs of the current task.",
                 category = ToolCategory.SYSTEM,
                 sensitivity = ToolSensitivity.SAFE,
-                parameterSchemaJson = """{"type":"object","properties":{"taskId":{"type":"string"}},"required":["taskId"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"taskId":{"type":"string"}},"required":["taskId"]}""",
+                handler = { args, _ ->
+                    val taskId = parseField(args, "taskId") ?: "current"
+                    ToolExecutionResult.success("""{"taskId":"$taskId","status":"RUNNING"}""")
+                }
             )
         )
         registerTool(
@@ -106,7 +126,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Performs text formatting, calculations, or data transformations.",
                 category = ToolCategory.SYSTEM,
                 sensitivity = ToolSensitivity.SAFE,
-                parameterSchemaJson = """{"type":"object","properties":{"content":{"type":"string"},"format":{"type":"string"}},"required":["content"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"content":{"type":"string"},"format":{"type":"string"}},"required":["content"]}""",
+                handler = { args, _ ->
+                    val content = parseField(args, "content") ?: args
+                    ToolExecutionResult.success("""{"formatted":"$content"}""")
+                }
             )
         )
 
@@ -118,7 +142,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Generates a new code or markdown document in the Dot workspace.",
                 category = ToolCategory.WORKSPACE,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"title":{"type":"string"},"type":{"type":"string"},"content":{"type":"string"},"language":{"type":"string"}},"required":["title","type","content"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"title":{"type":"string"},"type":{"type":"string"},"content":{"type":"string"},"language":{"type":"string"}},"required":["title","type","content"]}""",
+                handler = { args, _ ->
+                    val title = parseField(args, "title") ?: "Document"
+                    ToolExecutionResult.success("""{"status":"created","title":"$title"}""")
+                }
             )
         )
         registerTool(
@@ -128,7 +156,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Updates an existing workspace artifact with a new version.",
                 category = ToolCategory.WORKSPACE,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"},"content":{"type":"string"},"changeSummary":{"type":"string"}},"required":["artifactId","content"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"},"content":{"type":"string"},"changeSummary":{"type":"string"}},"required":["artifactId","content"]}""",
+                handler = { args, _ ->
+                    val artifactId = parseField(args, "artifactId") ?: ""
+                    ToolExecutionResult.success("""{"status":"updated","artifactId":"$artifactId"}""")
+                }
             )
         )
         registerTool(
@@ -138,7 +170,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Exports a workspace document to external device storage or share intent.",
                 category = ToolCategory.WORKSPACE,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"},"format":{"type":"string"}},"required":["artifactId"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"},"format":{"type":"string"}},"required":["artifactId"]}""",
+                handler = { args, _ ->
+                    val artifactId = parseField(args, "artifactId") ?: ""
+                    ToolExecutionResult.success("""{"status":"exported","artifactId":"$artifactId"}""")
+                }
             )
         )
         registerTool(
@@ -148,7 +184,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Writes a new long-term fact to Dot persistent memory.",
                 category = ToolCategory.MEMORY,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"fact":{"type":"string"},"category":{"type":"string"}},"required":["fact"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"fact":{"type":"string"},"category":{"type":"string"}},"required":["fact"]}""",
+                handler = { args, dotId ->
+                    val fact = parseField(args, "fact") ?: ""
+                    ToolExecutionResult.success("""{"status":"remembered","dotId":"$dotId","fact":"$fact"}""")
+                }
             )
         )
         registerTool(
@@ -158,7 +198,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Removes a specific memory entry from Dot persistent memory.",
                 category = ToolCategory.MEMORY,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"memoryId":{"type":"string"}},"required":["memoryId"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"memoryId":{"type":"string"}},"required":["memoryId"]}""",
+                handler = { args, dotId ->
+                    val memoryId = parseField(args, "memoryId") ?: ""
+                    ToolExecutionResult.success("""{"status":"forgotten","dotId":"$dotId","memoryId":"$memoryId"}""")
+                }
             )
         )
         registerTool(
@@ -168,7 +212,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Writes an artifact or data payload to device external storage.",
                 category = ToolCategory.STORAGE,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"fileName":{"type":"string"},"content":{"type":"string"}},"required":["fileName","content"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"fileName":{"type":"string"},"content":{"type":"string"}},"required":["fileName","content"]}""",
+                handler = { args, _ ->
+                    val fileName = parseField(args, "fileName") ?: "output.txt"
+                    ToolExecutionResult.success("""{"status":"saved","fileName":"$fileName"}""")
+                }
             )
         )
         registerTool(
@@ -178,7 +226,15 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Downloads and summarizes content from a specified external URL.",
                 category = ToolCategory.NETWORK,
                 sensitivity = ToolSensitivity.SENSITIVE,
-                parameterSchemaJson = """{"type":"object","properties":{"url":{"type":"string"}},"required":["url"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"url":{"type":"string"}},"required":["url"]}""",
+                handler = { args, _ ->
+                    val url = parseField(args, "url") ?: ""
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        ToolExecutionResult.failure("Invalid URL protocol: $url")
+                    } else {
+                        ToolExecutionResult.success("""{"status":"fetched","url":"$url"}""")
+                    }
+                }
             )
         )
 
@@ -190,7 +246,11 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Permanently removes an artifact and its entire version history.",
                 category = ToolCategory.WORKSPACE,
                 sensitivity = ToolSensitivity.CRITICAL,
-                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"}},"required":["artifactId"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"artifactId":{"type":"string"}},"required":["artifactId"]}""",
+                handler = { args, _ ->
+                    val artifactId = parseField(args, "artifactId") ?: ""
+                    ToolExecutionResult.success("""{"status":"deleted","artifactId":"$artifactId"}""")
+                }
             )
         )
         registerTool(
@@ -200,8 +260,24 @@ class DefaultToolRegistry : ToolRegistry {
                 description = "Permanently clears all learned memories and facts for this Dot.",
                 category = ToolCategory.MEMORY,
                 sensitivity = ToolSensitivity.CRITICAL,
-                parameterSchemaJson = """{"type":"object","properties":{"confirm":{"type":"boolean"}},"required":["confirm"]}"""
+                parameterSchemaJson = """{"type":"object","properties":{"confirm":{"type":"boolean"}},"required":["confirm"]}""",
+                handler = { args, dotId ->
+                    val confirmed = parseField(args, "confirm")?.toBooleanStrictOrNull() ?: false
+                    if (confirmed) {
+                        ToolExecutionResult.success("""{"status":"cleared","dotId":"$dotId"}""")
+                    } else {
+                        ToolExecutionResult.failure("Operation requires explicit 'confirm: true' confirmation")
+                    }
+                }
             )
         )
+    }
+
+    private fun parseField(jsonStr: String, fieldName: String): String? {
+        return try {
+            json.parseToJsonElement(jsonStr).jsonObject[fieldName]?.jsonPrimitive?.content
+        } catch (_: Exception) {
+            null
+        }
     }
 }

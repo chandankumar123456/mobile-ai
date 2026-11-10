@@ -108,7 +108,7 @@ class ChatViewModel(
     val openUiCoordinator = OpenUiCoordinator()
     val a2UiCoordinator = A2UiCoordinator()
     val toolCoordinator = ToolExecutionCoordinator(toolRegistry, toolAuditLogger)
-    val taskCoordinator = AgentTaskCoordinator(taskManager, viewModelScope)
+    val taskCoordinator = AgentTaskCoordinator(taskManager, toolRegistry, viewModelScope)
     val voiceCoordinator = VoiceCoordinator(sttManager, ttsManager)
     val metricsCoordinator = RuntimeMetricsCoordinator()
 

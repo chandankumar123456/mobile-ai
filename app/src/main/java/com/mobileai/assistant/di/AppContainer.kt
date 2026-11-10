@@ -52,6 +52,7 @@ interface AppContainer {
     val sttManager: SpeechToTextManager
     val ttsManager: TextToSpeechManager
     val exportService: ConversationExportService
+    val mcpServerManager: com.mobileai.assistant.data.mcp.McpServerManager
 
     val generateResponseUseCase: GenerateResponseUseCase
     val cancelGenerationUseCase: CancelGenerationUseCase
@@ -96,6 +97,7 @@ class AppContainerImpl(private val context: Context) : AppContainer {
     override val sttManager: SpeechToTextManager get() = serviceModule.sttManager
     override val ttsManager: TextToSpeechManager get() = serviceModule.ttsManager
     override val exportService: ConversationExportService get() = serviceModule.exportService
+    override val mcpServerManager: com.mobileai.assistant.data.mcp.McpServerManager get() = serviceModule.mcpServerManager
 
     override val generateResponseUseCase: GenerateResponseUseCase get() = useCaseModule.generateResponseUseCase
     override val cancelGenerationUseCase: CancelGenerationUseCase get() = useCaseModule.cancelGenerationUseCase

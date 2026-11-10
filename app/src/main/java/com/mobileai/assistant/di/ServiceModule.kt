@@ -35,4 +35,7 @@ class ServiceModule(private val context: Context) {
     val sttManager: SpeechToTextManager by lazy { SpeechToTextManager(context) }
     val ttsManager: TextToSpeechManager by lazy { TextToSpeechManager(context) }
     val exportService: ConversationExportService by lazy { ConversationExportService() }
+    val mcpServerManager: com.mobileai.assistant.data.mcp.McpServerManager by lazy {
+        com.mobileai.assistant.data.mcp.McpServerManager(context = context, toolRegistry = toolRegistry)
+    }
 }

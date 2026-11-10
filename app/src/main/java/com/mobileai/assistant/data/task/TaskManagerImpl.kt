@@ -412,8 +412,7 @@ class TaskManagerImpl(
             if (toolDef?.handler != null) {
                 toolDef.handler.execute(argsJson, task.dotId)
             } else {
-                // Built-in synthetic fallback execution for tools without custom handler
-                ToolExecutionResult.success("""{"tool":"${toolDef?.name}","status":"ok","echoArgs":$argsJson}""")
+                ToolExecutionResult.failure("No execution handler registered for tool '${toolDef?.name ?: step.toolName}'")
             }
         } catch (e: Exception) {
             ToolExecutionResult.failure(e.message ?: "Tool execution failed")
