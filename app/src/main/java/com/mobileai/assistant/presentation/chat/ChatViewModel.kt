@@ -66,6 +66,16 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.mobileai.assistant.presentation.chat.coordinator.A2UiCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.AgentTaskCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.ChatSessionCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.DotSessionCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.GenUiCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.OpenUiCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.RuntimeMetricsCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.StreamingGenerationCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.ToolExecutionCoordinator
+import com.mobileai.assistant.presentation.chat.coordinator.VoiceCoordinator
 
 class ChatViewModel(
     private val engine: LocalInferenceEngine,
@@ -89,6 +99,18 @@ class ChatViewModel(
     private val toolRegistry: ToolRegistry? = null,
     private val toolAuditLogger: ToolAuditLogger? = null
 ) : ViewModel() {
+
+    // Subsystem Coordinators
+    val dotCoordinator = DotSessionCoordinator(dotRepository, viewModelScope)
+    val sessionCoordinator = ChatSessionCoordinator(chatRepository, exportService)
+    val streamingCoordinator = StreamingGenerationCoordinator(engine, remoteEngine, generateResponseUseCase, cancelGenerationUseCase)
+    val genUiCoordinator = GenUiCoordinator(chatRepository)
+    val openUiCoordinator = OpenUiCoordinator()
+    val a2UiCoordinator = A2UiCoordinator()
+    val toolCoordinator = ToolExecutionCoordinator(toolRegistry, toolAuditLogger)
+    val taskCoordinator = AgentTaskCoordinator(taskManager, viewModelScope)
+    val voiceCoordinator = VoiceCoordinator(sttManager, ttsManager)
+    val metricsCoordinator = RuntimeMetricsCoordinator()
 
     private val _activeDot = MutableStateFlow<DotProfile>(DotProfile.STARTER_PROFILES.first())
     val activeDot: StateFlow<DotProfile> = _activeDot.asStateFlow()
@@ -474,7 +496,10 @@ class ChatViewModel(
         if (!session?.systemPromptOverride.isNullOrBlank()) {
             effective = effective.copy(systemPrompt = session!!.systemPromptOverride!!)
         } else {
-            val dotPrompt = DotPromptBuilder.buildSystemPrompt(activeDotProfile, emptyList())
+            val dotMemories = runCatching {
+                kotlinx.coroutines.runBlocking { dotRepository?.getMemoriesList(activeDotProfile.id) }
+            }.getOrNull() ?: emptyList()
+            val dotPrompt = DotPromptBuilder.buildSystemPrompt(activeDotProfile, dotMemories)
             if (dotPrompt.isNotBlank()) {
                 effective = effective.copy(systemPrompt = dotPrompt)
             } else if (effective.systemPrompt.isBlank()) {
