@@ -1,0 +1,37 @@
+[
+  {
+    "id": "sqa-01",
+    "prompt": "What is the capital of France? Answer in one word.",
+    "category": "factual_recall",
+    "expectedContains": ["Paris"],
+    "maxTokens": 16
+  },
+  {
+    "id": "sqa-02",
+    "prompt": "What is 17 multiplied by 4? Answer with only the number.",
+    "category": "arithmetic",
+    "expectedContains": ["68"],
+    "maxTokens": 16
+  },
+  {
+    "id": "sqa-03",
+    "prompt": "Which chemical element has the symbol Au?",
+    "category": "science",
+    "expectedContains": ["Gold"],
+    "maxTokens": 16
+  },
+  {
+    "id": "sqa-04",
+    "prompt": "What is the primary programming language for modern Android development?",
+    "category": "technical",
+    "expectedContains": ["Kotlin"],
+    "maxTokens": 16
+  },
+  {
+    "id": "sqa-05",
+    "prompt": "What is the boiling point of water in Celsius under standard atmospheric pressure?",
+    "category": "science",
+    "expectedContains": ["100"],
+    "maxTokens": 16
+  }
+]

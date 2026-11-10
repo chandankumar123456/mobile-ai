@@ -14,6 +14,9 @@ import com.mobileai.assistant.presentation.model.ModelSelectionViewModel
 import com.mobileai.assistant.presentation.settings.SettingsScreen
 import com.mobileai.assistant.presentation.settings.SettingsViewModel
 import com.mobileai.assistant.presentation.voice.VoiceConversationScreen
+import com.mobileai.assistant.presentation.benchmark.BenchmarkScreen
+import com.mobileai.assistant.presentation.evaluation.EvaluationScreen
+import com.mobileai.assistant.presentation.trace.TraceObservabilityScreen
 
 @Composable
 fun AppNavGraph(
@@ -63,6 +66,30 @@ fun AppNavGraph(
         composable(Screen.Settings.route) {
             SettingsScreen(
                 viewModel = settingsViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Benchmark.route) {
+            BenchmarkScreen(
+                engine = modelSelectionViewModel.engine,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Evaluation.route) {
+            EvaluationScreen(
+                toolRegistry = chatViewModel.toolCoordinator.getAvailableTools().let {
+                    com.mobileai.assistant.domain.tool.DefaultToolRegistry()
+                },
+                taskManager = null,
+                dotRepository = null,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Tracing.route) {
+            TraceObservabilityScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }

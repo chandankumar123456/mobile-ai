@@ -1,0 +1,16 @@
+[
+  {
+    "id": "genui-01",
+    "prompt": "Generate a GenUI card displaying a bar chart of monthly active users for Q1 to Q4.",
+    "category": "genui",
+    "expectedContains": ["chart", "bar"],
+    "maxTokens": 256
+  },
+  {
+    "id": "genui-02",
+    "prompt": "Generate a GenUI form for user profile input with fields for Name, Email, and Role.",
+    "category": "genui",
+    "expectedContains": ["form", "fields"],
+    "maxTokens": 256
+  }
+]

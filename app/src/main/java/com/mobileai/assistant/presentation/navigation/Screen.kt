@@ -6,5 +6,8 @@ sealed class Screen(val route: String) {
     data object Endpoints : Screen("endpoints")
     data object Settings : Screen("settings")
     data object VoiceMode : Screen("voice_mode")
+    data object Benchmark : Screen("benchmark")
+    data object Evaluation : Screen("evaluation")
+    data object Tracing : Screen("tracing")
 }
 

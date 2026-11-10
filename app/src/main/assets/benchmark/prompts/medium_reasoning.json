@@ -1,0 +1,23 @@
+[
+  {
+    "id": "mr-01",
+    "prompt": "If a train travels at 60 km/h for 2.5 hours, how many kilometers does it travel? Show your brief reasoning step.",
+    "category": "math_reasoning",
+    "expectedContains": ["150"],
+    "maxTokens": 128
+  },
+  {
+    "id": "mr-02",
+    "prompt": "Explain why on-device LLM inference provides superior user privacy compared to cloud API inference.",
+    "category": "systems_reasoning",
+    "expectedContains": ["device", "data", "cloud", "privacy"],
+    "maxTokens": 256
+  },
+  {
+    "id": "mr-03",
+    "prompt": "A store offers a 20% discount on a $50 jacket, followed by a 10% sales tax. What is the final price?",
+    "category": "math_reasoning",
+    "expectedContains": ["44"],
+    "maxTokens": 128
+  }
+]

@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ModelSelectionViewModel(
-    private val engine: LocalInferenceEngine,
+    val engine: LocalInferenceEngine,
     private val importModelUseCase: ImportModelUseCase,
     private val getImportedModelsUseCase: GetImportedModelsUseCase,
     private val loadModelUseCase: LoadModelUseCase,

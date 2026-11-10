@@ -1,0 +1,16 @@
+[
+  {
+    "id": "a2ui-01",
+    "prompt": "Generate an A2UI surfaceUpdate JSONL message creating a Card with root 'card-root' containing a Metric component.",
+    "category": "a2ui",
+    "expectedContains": ["surfaceUpdate", "Card", "Metric"],
+    "maxTokens": 256
+  },
+  {
+    "id": "a2ui-02",
+    "prompt": "Generate an A2UI dataModelUpdate message updating 'temperature' to '24C' and 'status' to 'Optimal'.",
+    "category": "a2ui",
+    "expectedContains": ["dataModelUpdate", "temperature"],
+    "maxTokens": 128
+  }
+]

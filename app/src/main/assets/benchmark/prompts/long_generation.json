@@ -1,0 +1,16 @@
+[
+  {
+    "id": "lg-01",
+    "prompt": "Write a detailed architectural overview of the Model Context Protocol (MCP), covering clients, servers, transports, tools, and resources.",
+    "category": "technical_writing",
+    "expectedContains": ["MCP", "protocol", "transport", "tool"],
+    "maxTokens": 512
+  },
+  {
+    "id": "lg-02",
+    "prompt": "Provide a comprehensive guide on optimizing llama.cpp inference for ARM NEON and KleidiAI on mobile CPUs.",
+    "category": "systems_engineering",
+    "expectedContains": ["ARM", "NEON", "inference", "quantization"],
+    "maxTokens": 512
+  }
+]

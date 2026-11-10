@@ -1,0 +1,18 @@
+[
+  {
+    "id": "tc-01",
+    "prompt": "Find documents related to architecture in the workspace using the available tools.",
+    "category": "tool_calling",
+    "expectedTool": "read_artifact",
+    "expectedContains": ["read_artifact"],
+    "maxTokens": 128
+  },
+  {
+    "id": "tc-02",
+    "prompt": "Store the following fact in persistent memory: 'User prefers dark theme and Kotlin language.'",
+    "category": "tool_calling",
+    "expectedTool": "remember_fact",
+    "expectedContains": ["remember_fact"],
+    "maxTokens": 128
+  }
+]
