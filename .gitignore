@@ -1,0 +1,47 @@
+# Gradle files
+.gradle/
+build/
+**/build/
+
+# Local configuration file (sdk path, ndk path, machine-specific)
+local.properties
+
+# Log/OS Files
+*.log
+.DS_Store
+Thumbs.db
+
+# Android Studio / IntelliJ generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+output.json
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Large model files (never commit GGUF files to Git)
+*.gguf
+*.bin
+models/
+app/src/main/assets/models/
+
+# Google Services
+google-services.json
+
+# Android Profiling
+*.hprof
+
+.agents/
+.vscode/
+.claude/
+.kotlin/
+docs/
